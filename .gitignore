@@ -1,0 +1,11 @@
+*.txt
+*.binaryfile
+*.csv
+*.npz
+*.npy
+*.7z
+*.zip
+*.avi
+*.mat
+*.kml
+*.hdf5
