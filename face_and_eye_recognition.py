@@ -36,7 +36,7 @@ def mosaic_area(src, x, y, width, height, ratio=0.1):
     dst[y:y + height, x:x + width] = mosaic(dst[y:y + height, x:x + width], ratio)
     return dst
 
-while True:
+def checkWink():
     # VideoCaptureから1フレーム読み込む
     ret, frame = cap.read()
 
@@ -72,40 +72,42 @@ while True:
             )
 
             if len(eyes) == 0:
-                # 目が閉じられたとみなす
-                spaceKey() # スペースキー入力
-                time.sleep(0.5)
-                cv2.putText(
-                    frame,
-                    'close your eyes',
-                    (x, y - 10), # 位置を少し調整
-                    cv2.FONT_HERSHEY_PLAIN,
-                    2,
-                    (0, 255,0),
-                    2,
-                    cv2.LINE_AA
-                )
-            # else:
-            #     for (ex, ey, ew, eh) in eyes:
-            #         # 目の部分にモザイク処理
-            #         frame = mosaic_area(
-            #             frame,
-            #             int((x + ex) - ew / 2),
-            #             int(y + ey),
-            #             int(ew * 2.5),
-            #             eh
-            #         )
+                return True
+    return False
 
-            # 顔検出した部分に枠を描画
-            cv2.rectangle(
-                frame,
-                (x, y),
-                (x + w, y + h),
-                (255, 255, 255),
-                thickness=2
-            )
+count = 0
+while True:
+    for i in range(3):
+        wink = checkWink()
+        count += int(wink)
+        time.sleep(0.05)
+    
+    if count == 3:
+        # 目が閉じられたとみなす
+        spaceKey() # スペースキー入力
+        time.sleep(0.25)
+        # cv2.putText(
+        #     frame,
+        #     'close your eyes',
+        #     (x, y - 10), # 位置を少し調整
+        #     cv2.FONT_HERSHEY_PLAIN,
+        #     2,
+        #     (0, 255,0),
+        #     2,
+        #     cv2.LINE_AA
+        # )
+        # # 顔検出した部分に枠を描画
+        # cv2.rectangle(
+        #     frame,
+        #     (x, y),
+        #     (x + w, y + h),
+        #     (255, 255, 255),
+        #     thickness=2
+        # )
 
-    cv2.imshow('frame', frame)
+        # cv2.imshow('frame', frame)
+
+    count = 0
 
     # キー入力を1ms待って、k が27（ESC）だったらBreakする
     k = cv2.waitKey(1)
